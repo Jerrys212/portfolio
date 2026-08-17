@@ -42,9 +42,9 @@ CONTACT_TO_EMAIL=   # opcional, correo destino si es distinto de SMTP_FROM
 
 ## Otros comandos
 
-| Comando                  | Descripción                    |
+| Comando                  | Descripción                     |
 | ------------------------ | ------------------------------- |
-| `pnpm build`              | Build de producción             |
-| `pnpm start`              | Corre el build de producción    |
-| `pnpm lint`               | Corre ESLint                    |
-| `pnpm exec tsc --noEmit`  | Type-check sin generar archivos |
+| `pnpm build`             | Build de producción             |
+| `pnpm start`             | Corre el build de producción    |
+| `pnpm lint`              | Corre ESLint                    |
+| `pnpm exec tsc --noEmit` | Type-check sin generar archivos |

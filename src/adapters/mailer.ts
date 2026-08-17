@@ -1,52 +1,49 @@
+import path from "node:path";
+
 import nodemailer from "nodemailer";
 
+import { buildContactNotificationEmail, CONTACT_ILLUSTRATION_CID } from "@/adapters/contact-email-template";
 import { env } from "@/lib/env";
 import type { ContactInput } from "@/lib/validations/contact";
 
+const isEmail = (value: string) => /^\S+@\S+\.\S+$/.test(value);
+
+const CONTACT_ILLUSTRATION_PATH = path.join(process.cwd(), "public", "email", "contact-illustration.png");
+
 let transporter: nodemailer.Transporter | null = null;
 
-function getTransporter() {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: env.SMTP_HOST,
-      port: env.SMTP_PORT,
-      secure: env.SMTP_PORT === 465,
-      auth: {
-        user: env.SMTP_USER,
-        pass: env.SMTP_PASS,
-      },
+const getTransporter = () => {
+    if (!transporter) {
+        transporter = nodemailer.createTransport({
+            host: env.SMTP_HOST,
+            port: env.SMTP_PORT,
+            secure: env.SMTP_PORT === 465,
+            auth: {
+                user: env.SMTP_USER,
+                pass: env.SMTP_PASS,
+            },
+        });
+    }
+    return transporter;
+};
+
+export const sendContactEmail = async (data: ContactInput) => {
+    const to = env.CONTACT_TO_EMAIL ?? env.SMTP_FROM;
+    const { subject, html, text } = buildContactNotificationEmail(data);
+
+    await getTransporter().sendMail({
+        from: `"Portafolio — Gerardo García" <${env.SMTP_FROM}>`,
+        to,
+        replyTo: isEmail(data.contact) ? data.contact : undefined,
+        subject,
+        text,
+        html,
+        attachments: [
+            {
+                filename: "contact-illustration.png",
+                path: CONTACT_ILLUSTRATION_PATH,
+                cid: CONTACT_ILLUSTRATION_CID,
+            },
+        ],
     });
-  }
-  return transporter;
-}
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-export async function sendContactEmail(data: ContactInput) {
-  const to = env.CONTACT_TO_EMAIL ?? env.SMTP_FROM;
-
-  await getTransporter().sendMail({
-    from: `"Portfolio" <${env.SMTP_FROM}>`,
-    to,
-    replyTo: data.contact,
-    subject: `[Portfolio] ${data.subject}`,
-    text: [
-      `Nombre: ${data.name}`,
-      `Contacto: ${data.contact}`,
-      "",
-      data.message,
-    ].join("\n"),
-    html: [
-      `<p><strong>Nombre:</strong> ${escapeHtml(data.name)}</p>`,
-      `<p><strong>Contacto:</strong> ${escapeHtml(data.contact)}</p>`,
-      `<p>${escapeHtml(data.message).replace(/\n/g, "<br />")}</p>`,
-    ].join(""),
-  });
-}
+};

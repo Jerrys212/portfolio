@@ -6,16 +6,18 @@ import { ProjectsSection } from "@/features/projects/components/projects-section
 import { ServicesSection } from "@/features/services/components/services-section";
 import { StackSection } from "@/features/stack/components/stack-section";
 
-export default function Home() {
-  return (
-    <>
-      <HeroSection />
-      <AboutSection />
-      <StackSection />
-      <ExperienceSection />
-      <ServicesSection />
-      <ProjectsSection />
-      <ContactSection />
-    </>
-  );
-}
+const Home = () => {
+    return (
+        <>
+            <HeroSection />
+            <AboutSection />
+            <StackSection />
+            <ExperienceSection />
+            <ServicesSection />
+            <ProjectsSection />
+            <ContactSection />
+        </>
+    );
+};
+
+export default Home;
