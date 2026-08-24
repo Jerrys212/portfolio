@@ -3,6 +3,7 @@ import path from "node:path";
 import nodemailer from "nodemailer";
 
 import { buildContactNotificationEmail, CONTACT_ILLUSTRATION_CID } from "@/adapters/contact-email-template";
+import { buildVisitNotificationEmail } from "@/adapters/visit-email-template";
 import { env } from "@/lib/env";
 import type { ContactInput } from "@/lib/validations/contact";
 
@@ -45,5 +46,18 @@ export const sendContactEmail = async (data: ContactInput) => {
                 cid: CONTACT_ILLUSTRATION_CID,
             },
         ],
+    });
+};
+
+export const sendVisitNotificationEmail = async () => {
+    const to = env.CONTACT_TO_EMAIL ?? env.SMTP_FROM;
+    const { subject, html, text } = buildVisitNotificationEmail();
+
+    await getTransporter().sendMail({
+        from: `"Portafolio — Gerardo García" <${env.SMTP_FROM}>`,
+        to,
+        subject,
+        text,
+        html,
     });
 };

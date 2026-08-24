@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import "./globals.css";
 
+import { VisitPing } from "@/components/analytics/visit-ping";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 
@@ -21,6 +22,7 @@ const RootLayout = ({ children }: LayoutProps<"/">) => {
     return (
         <html lang="es" className={`${lexend.variable} h-full scroll-smooth antialiased`}>
             <body className="flex min-h-full flex-col bg-background text-foreground">
+                <VisitPing />
                 <SiteHeader />
                 <main className="flex-1">{children}</main>
                 <SiteFooter />
