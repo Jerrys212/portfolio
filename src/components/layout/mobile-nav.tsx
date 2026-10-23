@@ -5,9 +5,9 @@ import { Download, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { NAV_LINKS, SITE } from "@/lib/constants";
+import { NAV_LINKS } from "@/lib/constants";
 
-export const MobileNav = () => {
+export const MobileNav = ({ cvUrl }: { cvUrl: string | null }) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -33,14 +33,16 @@ export const MobileNav = () => {
                         </a>
                     ))}
                 </nav>
-                <div className="mt-auto px-4 pb-4">
-                    <Button asChild className="w-full">
-                        <a href={SITE.cvUrl} download>
-                            <Download aria-hidden="true" />
-                            Descargar CV
-                        </a>
-                    </Button>
-                </div>
+                {cvUrl && (
+                    <div className="mt-auto px-4 pb-4">
+                        <Button asChild className="w-full">
+                            <a href={cvUrl} download target="_blank" rel="noopener noreferrer">
+                                <Download aria-hidden="true" />
+                                Descargar CV
+                            </a>
+                        </Button>
+                    </div>
+                )}
             </SheetContent>
         </Sheet>
     );
