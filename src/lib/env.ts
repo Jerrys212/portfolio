@@ -7,6 +7,8 @@ const EnvSchema = z.object({
     SMTP_PASS: z.string().min(1),
     SMTP_FROM: z.string().email(),
     CONTACT_TO_EMAIL: z.string().email().optional(),
+    STRAPI_URL: z.url(),
+    STRAPI_API_TOKEN: z.string().min(1),
 });
 
 export const env = EnvSchema.parse({
@@ -16,4 +18,6 @@ export const env = EnvSchema.parse({
     SMTP_PASS: process.env.SMTP_PASS,
     SMTP_FROM: process.env.SMTP_FROM,
     CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL,
+    STRAPI_URL: process.env.STRAPI_URL,
+    STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN,
 });
