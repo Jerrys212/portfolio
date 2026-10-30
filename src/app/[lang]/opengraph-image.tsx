@@ -1,12 +1,22 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/data/profile";
-import { isLocale } from "@/i18n/config";
-import { getDictionary } from "@/i18n/dictionaries";
+import { getGlobal } from "@/data/global/get-global";
+import { getHomePage } from "@/data/home-page/get-home-page";
+import { defaultLocale, isLocale } from "@/i18n/config";
 import { palette } from "@/lib/theme";
 
-export const alt = `${profile.fullName} · Full Stack Developer`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+const size = { width: 1200, height: 630 };
+
+export async function generateImageMetadata({ params }: { params: { lang: string } }) {
+  const global = await getGlobal(isLocale(params.lang) ? params.lang : defaultLocale);
+  return [
+    {
+      id: "default",
+      alt: global.seo?.ogImageAlt ?? `${global.fullName} · ${global.role}`,
+      size,
+      contentType: "image/png",
+    },
+  ];
+}
 
 export default async function OpenGraphImage({
   params,
@@ -14,7 +24,8 @@ export default async function OpenGraphImage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const { hero } = getDictionary(isLocale(lang) ? lang : "es");
+  const locale = isLocale(lang) ? lang : defaultLocale;
+  const [global, { hero }] = await Promise.all([getGlobal(locale), getHomePage(locale)]);
 
   return new ImageResponse(
     (
@@ -44,7 +55,7 @@ export default async function OpenGraphImage({
           <span>{hero.titleBottom}</span>
         </div>
         <div style={{ marginTop: 40, fontSize: 30, color: palette.sec }}>
-          {profile.githubUrl.replace("https://", "")}
+          {global.githubUrl.replace("https://", "")}
         </div>
       </div>
     ),

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { profile } from "@/data/profile";
+import { getGlobal } from "@/data/global/get-global";
 import { isLocale, locales } from "@/i18n/config";
-import { getDictionary } from "@/i18n/dictionaries";
+import { env } from "@/lib/env";
 import "../globals.css";
 
 export const dynamicParams = false;
@@ -16,23 +16,25 @@ export async function generateMetadata({
 }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  const { meta } = getDictionary(lang);
+  const global = await getGlobal(lang);
+  const title = global.seo?.metaTitle ?? `${global.fullName} | ${global.role}`;
+  const description = global.seo?.metaDescription ?? global.role;
 
   return {
-    metadataBase: new URL(profile.siteUrl),
-    title: meta.title,
-    description: meta.description,
+    metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+    title,
+    description,
     icons: { icon: { url: "/favicon.png", type: "image/png" } },
     alternates: {
       canonical: `/${lang}`,
       languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
     },
     openGraph: {
-      title: meta.title,
-      description: meta.description,
+      title,
+      description,
       url: `/${lang}`,
       type: "website",
-      siteName: profile.fullName,
+      siteName: global.fullName,
       locale: lang === "es" ? "es_MX" : "en_US",
     },
   };
@@ -44,16 +46,16 @@ export default async function RootLayout({
 }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
-  const { meta } = getDictionary(lang);
+  const global = await getGlobal(lang);
 
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: profile.fullName,
-    url: profile.siteUrl,
-    sameAs: [profile.githubUrl, profile.linkedinUrl],
-    jobTitle: "Full Stack Developer",
-    description: meta.description,
+    name: global.fullName,
+    url: env.NEXT_PUBLIC_SITE_URL,
+    sameAs: [global.githubUrl, global.linkedinUrl],
+    jobTitle: global.role,
+    description: global.seo?.metaDescription ?? global.role,
   };
 
   return (

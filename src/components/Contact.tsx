@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import type { ContactSection } from "@/data/home-page/types";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { sendContactMessage } from "@/lib/contact";
 
@@ -9,7 +10,13 @@ const fieldClass =
 
 type Status = "idle" | "sending" | "sent" | "error";
 
-export default function Contact({ dict }: { dict: Dictionary["contact"] }) {
+interface ContactProps {
+  content: ContactSection;
+  dict: Dictionary["contact"];
+}
+
+export default function Contact({ content, dict }: ContactProps) {
+  const { header, location } = content;
   const [status, setStatus] = useState<Status>("idle");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -34,17 +41,19 @@ export default function Contact({ dict }: { dict: Dictionary["contact"] }) {
   return (
     <section id="contact" className="w-full py-12 border-t border-divider">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-lg text-sec mb-2 shiny-sec">{dict.eyebrow}</h2>
+        {header.eyebrow && <h2 className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</h2>}
         <h3 className="text-4xl md:text-5xl font-medium text-light mb-6">
-          {dict.title}
+          {header.heading}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="text-icon">
-            <p className="mb-4">{dict.intro}</p>
-            <div className="flex items-center gap-2">
-              <span>{dict.locationLabel}</span>
-              <span className="text-light">{dict.location}</span>
-            </div>
+            {header.description && <p className="mb-4">{header.description}</p>}
+            {location && (
+              <div className="flex items-center gap-2">
+                <span>{dict.locationLabel}</span>
+                <span className="text-light">{location}</span>
+              </div>
+            )}
           </div>
 
           <div>
