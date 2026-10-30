@@ -1,6 +1,6 @@
-import { technologies } from "@/data/profile";
+import type { Technology } from "@/data/technologies/types";
 
-export default function LogoWall() {
+export default function LogoWall({ technologies }: { technologies: Technology[] }) {
   return (
     <div className="relative overflow-x-hidden py-8">
       <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-20"></div>
@@ -9,12 +9,12 @@ export default function LogoWall() {
       <div className="flex animate-scroll w-max will-change-transform">
         {[...technologies, ...technologies].map((tech, index) => (
           <div
-            key={index}
+            key={`${tech.documentId}-${index}`}
             className="flex items-center gap-2 pr-12 md:pr-20 group transition-all duration-300"
             aria-hidden={index >= technologies.length ? "true" : "false"}
           >
             <img
-              src={`/svg/${tech.icon}.svg`}
+              src={tech.icon.url}
               alt={tech.name}
               className="h-7 w-auto object-contain transition-transform group-hover:scale-110 opacity-60"
               width="30"

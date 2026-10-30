@@ -1,17 +1,16 @@
-import { profile } from "@/data/profile";
+import type { Global } from "@/data/global/types";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { EmailIcon, GitHubIcon, LinkedInIcon } from "./SocialIcons";
 
-const socialLinks = [
-  { href: profile.githubUrl, icon: <GitHubIcon className="size-8" />, label: "GitHub" },
-  { href: profile.linkedinUrl, icon: <LinkedInIcon className="size-8" />, label: "LinkedIn" },
-  { href: `mailto:${profile.email}`, icon: <EmailIcon />, label: "Email" },
-];
-
 const textLinkClass = "text-icon hover:text-light transition duration-300 ease-in-out";
 
-export default function Footer({ dict }: { dict: Dictionary["footer"] }) {
+export default function Footer({ global, dict }: { global: Global; dict: Dictionary["footer"] }) {
   const currentYear = new Date().getFullYear();
+  const socialLinks = [
+    { href: global.githubUrl, icon: <GitHubIcon className="size-8" />, label: "GitHub" },
+    { href: global.linkedinUrl, icon: <LinkedInIcon className="size-8" />, label: "LinkedIn" },
+    { href: `mailto:${global.email}`, icon: <EmailIcon />, label: "Email" },
+  ];
 
   return (
     <footer className="w-full py-12 border-t border-divider">
@@ -47,7 +46,7 @@ export default function Footer({ dict }: { dict: Dictionary["footer"] }) {
           <p className="text-center text-sm text-icon space-y-2">
             {/* If you are using this template, by MIT License you can't remove the copyright notice */}
             <span className="block sm:inline">
-              Copyright © {currentYear} {profile.fullName}. {dict.rights} {dict.templateBy} <a target="_blank" rel="noopener noreferrer" className={textLinkClass} href="https://github.com/Gothsec">Andres Hernandez</a> <br /> {dict.distributedBy} <a target="_blank" rel="noopener noreferrer" className={textLinkClass} href="https://themewagon.com">ThemeWagon</a>
+              Copyright © {currentYear} {global.fullName}. {dict.rights} {dict.templateBy} <a target="_blank" rel="noopener noreferrer" className={textLinkClass} href="https://github.com/Gothsec">Andres Hernandez</a> <br /> {dict.distributedBy} <a target="_blank" rel="noopener noreferrer" className={textLinkClass} href="https://themewagon.com">ThemeWagon</a>
             </span>
           </p>
         </div>
