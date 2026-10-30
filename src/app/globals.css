@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Montserrat Variable";
+  src: url("/fonts/montserrat-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #101010;
+  --sec: #a476ff;
+  --white: #dfdfdf;
+  --white-icon: #f3f3f398;
+  --white-icon-tr: #f3f3f310;
+  --surface: #1414149c;
+  --divider: #ffffff10;
+  --indicator: #a9ff5b;
+}
+
+* {
+  font-family:
+    "Montserrat Variable",
+    -apple-system,
+    system-ui,
+    sans-serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+*::selection {
+  background-color: var(--sec);
+  color: var(--background);
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--background);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+#main-nav {
+  transform: translateX(-50%);
+  background-color: var(--background);
+  transition:
+    background-color 0.3s ease,
+    border-radius 0.3s ease,
+    border-color 0.3s ease;
+}
+
+#main-nav.scrolling {
+  background-color: transparent;
+  border-color: var(--divider);
+  border-radius: 9999px;
+}
+
+#main-nav a.active .nav-indicator {
+  transform: translateY(-50%) scale(1);
+  opacity: 1;
+}
+
+#main-nav a.active {
+  color: white !important;
+}
+
+@media (max-width: 767px) {
+  #main-nav {
+    width: 100% !important;
+    transform: translateX(-50%);
+    bottom: 0;
+    left: 50%;
+    position: fixed;
+    border-radius: 1rem 1rem 0 0;
+    border-color: var(--divider);
+  }
+
+  #main-nav.scrolling {
+    border-radius: 1rem 1rem 0 0;
+    background-color: transparent;
+  }
+
+  body {
+    padding-bottom: 70px;
+  }
+}
+
+.shiny-sec {
+  background: linear-gradient(135deg, #a476ff 25%, #eee5ff 50%, #a476ff 75%);
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100% 50%;
+  }
+  30%,
+  70% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 60s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .animate-scroll {
+    animation-duration: 50s;
+  }
+}
