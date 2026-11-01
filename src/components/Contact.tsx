@@ -41,10 +41,10 @@ export default function Contact({ content, dict }: ContactProps) {
   return (
     <section id="contact" className="w-full py-12 border-t border-divider">
       <div className="max-w-5xl mx-auto">
-        {header.eyebrow && <h2 className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</h2>}
-        <h3 className="text-4xl md:text-5xl font-medium text-light mb-6">
+        {header.eyebrow && <p className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</p>}
+        <h2 className="text-4xl md:text-5xl font-medium text-light mb-6">
           {header.heading}
-        </h3>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="text-icon">
             {header.description && <p className="mb-4">{header.description}</p>}

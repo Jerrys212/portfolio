@@ -31,6 +31,7 @@ export default function Footer({ global, dict }: { global: Global; dict: Diction
           <div className="flex flex-col items-center lg:items-end">
             <div className="w-full max-w-xs">
               <iframe
+                title="Spotify playlist"
                 style={{ borderRadius: "12px", border: 0 }}
                 src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0"
                 className="w-full h-40"

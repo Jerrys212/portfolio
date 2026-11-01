@@ -17,28 +17,32 @@ export default function Projects({ header, items, githubUrl, dict }: ProjectsPro
   return (
     <section id="projects" className="py-12 border-t border-divider text-light">
       <div className="max-w-5xl mx-auto">
-        {header.eyebrow && <h2 className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</h2>}
-        <h3 className="text-4xl md:text-5xl font-medium mb-8">{header.heading}</h3>
+        {header.eyebrow && <p className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</p>}
+        <h2 className="text-4xl md:text-5xl font-medium mb-8">{header.heading}</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {items.map((project) => {
             const mainUrl = project.liveUrl ?? project.repoUrl;
 
             return (
-              <div key={project.documentId} className="group">
+              <article key={project.documentId} className="group">
                 <a href={mainUrl} target="_blank" rel="noopener noreferrer" className="block">
                   <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 mb-4">
                     <img
                       src={project.image.url}
                       alt={project.image.alternativeText || project.title}
                       className="w-full h-48 md:h-72 object-cover group-hover:scale-105 transition-transform duration-300"
+                      width={1200}
+                      height={675}
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </a>
                 <div className="flex items-center px-3">
                   <a href={mainUrl} target="_blank" rel="noopener noreferrer" className="block">
                     <div className="flex-grow">
-                      <h4 className="text-2xl font-semibold">{project.title}</h4>
+                      <h3 className="text-2xl font-semibold">{project.title}</h3>
                       <span className="py-1 text-sm text-icon">{project.subtitle}</span>
                     </div>
                   </a>
@@ -57,7 +61,7 @@ export default function Projects({ header, items, githubUrl, dict }: ProjectsPro
                     )}
                   </div>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>

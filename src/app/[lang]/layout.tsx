@@ -1,11 +1,19 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { getGlobal } from "@/data/global/get-global";
-import { isLocale, locales } from "@/i18n/config";
+import { defaultLocale, isLocale, locales } from "@/i18n/config";
+import { getDictionary } from "@/i18n/dictionaries";
 import { env } from "@/lib/env";
+import { ogLocales, resolveSeo } from "@/lib/seo";
+import { palette } from "@/lib/theme";
 import "../globals.css";
 
 export const dynamicParams = false;
+
+export const viewport: Viewport = {
+  themeColor: palette.background,
+  colorScheme: "dark",
+};
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -17,26 +25,59 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const global = await getGlobal(lang);
-  const title = global.seo?.metaTitle ?? `${global.fullName} | ${global.role}`;
-  const description = global.seo?.metaDescription ?? global.role;
+  const { seo } = getDictionary(lang);
+  const { title, description } = resolveSeo(global, seo);
 
   return {
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
     title,
     description,
-    icons: { icon: { url: "/favicon.png", type: "image/png" } },
+    keywords: [global.fullName, global.role, ...seo.keywords],
+    authors: [{ name: global.fullName, url: global.linkedinUrl }],
+    creator: global.fullName,
+    publisher: global.fullName,
+    applicationName: global.fullName,
+    category: "technology",
+    formatDetection: { telephone: false, address: false, email: false },
+    icons: {
+      icon: { url: "/favicon.png", type: "image/png" },
+      apple: { url: "/favicon.png", type: "image/png" },
+    },
     alternates: {
       canonical: `/${lang}`,
-      languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
+      languages: {
+        ...Object.fromEntries(locales.map((l) => [l, `/${l}`])),
+        "x-default": `/${defaultLocale}`,
+      },
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
     openGraph: {
       title,
       description,
       url: `/${lang}`,
-      type: "website",
+      type: "profile",
       siteName: global.fullName,
-      locale: lang === "es" ? "es_MX" : "en_US",
+      locale: ogLocales[lang],
+      alternateLocale: locales.filter((l) => l !== lang).map((l) => ogLocales[l]),
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    ...(env.GOOGLE_SITE_VERIFICATION && {
+      verification: { google: env.GOOGLE_SITE_VERIFICATION },
+    }),
   };
 }
 
@@ -46,17 +87,6 @@ export default async function RootLayout({
 }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
-  const global = await getGlobal(lang);
-
-  const personJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: global.fullName,
-    url: env.NEXT_PUBLIC_SITE_URL,
-    sameAs: [global.githubUrl, global.linkedinUrl],
-    jobTitle: global.role,
-    description: global.seo?.metaDescription ?? global.role,
-  };
 
   return (
     <html lang={lang}>
@@ -67,10 +97,6 @@ export default async function RootLayout({
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
       </head>
       <body className="bg-background sm:px-28 lg:px-20 px-9">{children}</body>

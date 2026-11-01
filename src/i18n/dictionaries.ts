@@ -1,6 +1,7 @@
 import type { Locale } from "./config";
 
 export interface Dictionary {
+  seo: { title: string; description: string; keywords: string[] };
   nav: {
     home: string;
     experience: string;
@@ -27,6 +28,24 @@ export interface Dictionary {
 }
 
 const es: Dictionary = {
+  seo: {
+    title: "Desarrollador Full Stack · Next.js, React y TypeScript",
+    description:
+      "Desarrollador Full Stack en México especializado en frontend con Next.js, React, Angular y TypeScript. Experiencia en consultoría con NestJS, Node.js y .NET.",
+    keywords: [
+      "desarrollador full stack",
+      "desarrollador frontend",
+      "desarrollador web México",
+      "desarrollador Next.js",
+      "desarrollador React",
+      "desarrollador Angular",
+      "TypeScript",
+      "NestJS",
+      "Node.js",
+      ".NET Core",
+      "portafolio desarrollador",
+    ],
+  },
   nav: {
     home: "Inicio",
     experience: "Experiencia",
@@ -61,6 +80,24 @@ const es: Dictionary = {
 };
 
 const en: Dictionary = {
+  seo: {
+    title: "Full Stack Developer · Next.js, React & TypeScript",
+    description:
+      "Full Stack Developer based in Mexico, specialized in frontend with Next.js, React, Angular and TypeScript. Consulting experience with NestJS, Node.js and .NET.",
+    keywords: [
+      "full stack developer",
+      "frontend developer",
+      "web developer Mexico",
+      "Next.js developer",
+      "React developer",
+      "Angular developer",
+      "TypeScript",
+      "NestJS",
+      "Node.js",
+      ".NET Core",
+      "developer portfolio",
+    ],
+  },
   nav: {
     home: "Home",
     experience: "Experience",
