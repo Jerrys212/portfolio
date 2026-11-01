@@ -39,10 +39,6 @@ export async function generateMetadata({
     applicationName: global.fullName,
     category: "technology",
     formatDetection: { telephone: false, address: false, email: false },
-    icons: {
-      icon: { url: "/favicon.png", type: "image/png" },
-      apple: { url: "/favicon.png", type: "image/png" },
-    },
     alternates: {
       canonical: `/${lang}`,
       languages: {

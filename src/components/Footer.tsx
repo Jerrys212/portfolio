@@ -1,6 +1,7 @@
 import type { Global } from "@/data/global/types";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { EmailIcon, GitHubIcon, LinkedInIcon } from "./SocialIcons";
+import SpotifyEmbed from "./SpotifyEmbed";
 
 const textLinkClass = "text-icon hover:text-light transition duration-300 ease-in-out";
 
@@ -30,15 +31,7 @@ export default function Footer({ global, dict }: { global: Global; dict: Diction
 
           <div className="flex flex-col items-center lg:items-end">
             <div className="w-full max-w-xs">
-              <iframe
-                title="Spotify playlist"
-                style={{ borderRadius: "12px", border: 0 }}
-                src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0"
-                className="w-full h-40"
-                allowFullScreen
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              ></iframe>
+              <SpotifyEmbed src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" />
             </div>
           </div>
         </div>

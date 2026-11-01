@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ProjectItem } from "@/data/projects/types";
 import type { SectionHeader } from "@/data/types";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -27,15 +28,13 @@ export default function Projects({ header, items, githubUrl, dict }: ProjectsPro
             return (
               <article key={project.documentId} className="group">
                 <a href={mainUrl} target="_blank" rel="noopener noreferrer" className="block">
-                  <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 mb-4">
-                    <img
+                  <div className="relative h-48 md:h-72 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 mb-4">
+                    <Image
                       src={project.image.url}
                       alt={project.image.alternativeText || project.title}
-                      className="w-full h-48 md:h-72 object-cover group-hover:scale-105 transition-transform duration-300"
-                      width={1200}
-                      height={675}
-                      loading="lazy"
-                      decoding="async"
+                      fill
+                      sizes="(min-width: 1024px) 480px, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 </a>
