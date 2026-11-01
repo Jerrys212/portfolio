@@ -24,9 +24,9 @@ export default function SkillsList({ title, services }: { title: string; service
 
   return (
     <div className="text-left pt-3 md:pt-9">
-      <h3 className="text-light text-3xl md:text-4xl font-semibold md:mb-6">
+      <h2 className="text-light text-3xl md:text-4xl font-semibold md:mb-6">
         {title}
-      </h3>
+      </h2>
       <ul className="space-y-4 mt-4 text-lg">
         {services.map(({ documentId: id, icon, title: name, items }) => (
           <li key={id} className="w-full">

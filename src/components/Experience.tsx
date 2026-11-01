@@ -15,8 +15,8 @@ export default function Experience({ lang, header, items, dict }: ExperienceProp
   return (
     <section id="experience" className="py-12 border-t border-divider text-light">
       <div className="max-w-5xl mx-auto">
-        {header.eyebrow && <h2 className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</h2>}
-        <h3 className="text-4xl md:text-5xl font-medium mb-8">{header.heading}</h3>
+        {header.eyebrow && <p className="text-lg text-sec mb-2 shiny-sec">{header.eyebrow}</p>}
+        <h2 className="text-4xl md:text-5xl font-medium mb-8">{header.heading}</h2>
 
         <ol className="space-y-4">
           {items.map((job) => (
@@ -25,7 +25,7 @@ export default function Experience({ lang, header, items, dict }: ExperienceProp
               className="bg-surface border border-icon-tr rounded-2xl p-6"
             >
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1">
-                <h4 className="text-2xl font-semibold">{job.company}</h4>
+                <h3 className="text-2xl font-semibold">{job.company}</h3>
                 <span className="text-sm text-icon">
                   {formatPeriod(lang, job.startDate, job.endDate, dict.present)}
                 </span>

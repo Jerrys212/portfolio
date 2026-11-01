@@ -10,6 +10,7 @@ const EnvSchema = z.object({
   SMTP_PASS: z.string().min(1),
   SMTP_FROM: z.email(),
   CONTACT_TO_EMAIL: z.email().optional().or(z.literal("")),
+  GOOGLE_SITE_VERIFICATION: z.string().optional(),
 });
 
 export const env = EnvSchema.parse({
@@ -22,4 +23,5 @@ export const env = EnvSchema.parse({
   SMTP_PASS: process.env.SMTP_PASS,
   SMTP_FROM: process.env.SMTP_FROM,
   CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL,
+  GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION || undefined,
 });
