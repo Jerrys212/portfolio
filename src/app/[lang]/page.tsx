@@ -16,58 +16,45 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { buildProfileJsonLd, resolveSeo, serializeJsonLd } from "@/lib/seo";
 
 export default async function Page({ params }: PageProps<"/[lang]">) {
-  const { lang } = await params;
-  if (!isLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+    const { lang } = await params;
+    if (!isLocale(lang)) notFound();
+    const dict = getDictionary(lang);
 
-  const [global, homePage, services, technologies, experiences, projects] = await Promise.all([
-    getGlobal(lang),
-    getHomePage(lang),
-    getServices(lang),
-    getTechnologies(),
-    getExperiences(lang),
-    getProjects(lang),
-  ]);
+    const [global, homePage, services, technologies, experiences, projects] = await Promise.all([
+        getGlobal(lang),
+        getHomePage(lang),
+        getServices(lang),
+        getTechnologies(),
+        getExperiences(lang),
+        getProjects(lang),
+    ]);
 
-  const jsonLd = buildProfileJsonLd({
-    lang,
-    global,
-    ...resolveSeo(global, dict.seo),
-    experiences,
-    technologies,
-  });
+    const jsonLd = buildProfileJsonLd({
+        lang,
+        global,
+        ...resolveSeo(global, dict.seo),
+        experiences,
+        technologies,
+    });
 
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
-      />
-      <Nav lang={lang} dict={dict.nav} />
-      <main>
-        <Home
-          global={global}
-          hero={homePage.hero}
-          skillsTitle={homePage.skills.heading}
-          services={services}
-          technologies={technologies}
-          dict={dict.hero}
-        />
-        <Experience
-          lang={lang}
-          header={homePage.experience}
-          items={experiences}
-          dict={dict.experience}
-        />
-        <Projects
-          header={homePage.projects}
-          items={projects}
-          githubUrl={global.githubUrl}
-          dict={dict.projects}
-        />
-        <Contact content={homePage.contact} dict={dict.contact} />
-      </main>
-      <Footer global={global} dict={dict.footer} />
-    </>
-  );
+    return (
+        <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
+            <Nav lang={lang} dict={dict.nav} />
+            <main>
+                <Home
+                    global={global}
+                    hero={homePage.hero}
+                    skillsTitle={homePage.skills.heading}
+                    services={services}
+                    technologies={technologies}
+                    dict={dict.hero}
+                />
+                <Experience lang={lang} header={homePage.experience} items={experiences} dict={dict.experience} />
+                <Projects header={homePage.projects} items={projects} githubUrl={global.githubUrl} dict={dict.projects} />
+                <Contact content={homePage.contact} dict={dict.contact} />
+            </main>
+            <Footer global={global} dict={dict.footer} />
+        </>
+    );
 }
