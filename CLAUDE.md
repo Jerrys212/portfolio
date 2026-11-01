@@ -54,20 +54,20 @@
 1. **TypeScript Strict Mode**: Always enabled
 2. **No `any` types**: Use proper types or `unknown`
 3. **Error Handling**:
-   - Always handle errors explicitly
-   - Use proper HTTP status codes
-   - Return user-friendly error messages
-   - Log errors with context
+    - Always handle errors explicitly
+    - Use proper HTTP status codes
+    - Return user-friendly error messages
+    - Log errors with context
 4. **Corner Cases**:
-   - Check for null/undefined before operations
-   - Validate array lengths before access
-   - Handle edge cases in pagination
-   - Validate user input thoroughly (Zod schemas)
+    - Check for null/undefined before operations
+    - Validate array lengths before access
+    - Handle edge cases in pagination
+    - Validate user input thoroughly (Zod schemas)
 5. **UX-Focused Errors**:
-   - Spanish error messages for end users
-   - Clear, actionable error messages
-   - Avoid exposing internal details
-   - Include helpful suggestions when possible
+    - Spanish error messages for end users
+    - Clear, actionable error messages
+    - Avoid exposing internal details
+    - Include helpful suggestions when possible
 
 ### Naming Conventions
 
@@ -107,58 +107,54 @@
 
 1. **All validation goes through Zod.** No manual `if (typeof x !== ...)` checks, no hand-written validation. Define a schema and `parse`/`safeParse`.
 2. **Infer types from schemas, never write them by hand.** Use `z.infer<typeof Schema>` so the type and the runtime check can never drift apart.
-   ```ts
-   export const UserSchema = z.object({
-     id: z.string().uuid(),
-     email: z.string().email(),
-     name: z.string().min(1),
-   });
-   export type User = z.infer<typeof UserSchema>;
-   ```
+    ```ts
+    export const UserSchema = z.object({
+        id: z.string().uuid(),
+        email: z.string().email(),
+        name: z.string().min(1),
+    });
+    export type User = z.infer<typeof UserSchema>;
+    ```
 3. **Validate every API response before using it.** Data crossing the network boundary (`apiFetch`, external services) is `unknown` until a Zod schema validates it. Never trust the shape of a response.
 4. **Centralize validated fetching in `apiFetch`.** The single HTTP exit point takes a schema and returns typed, validated data:
-   ```ts
-   export async function apiFetch<T>(
-     url: string,
-     schema: z.ZodType<T>,
-     init?: RequestInit,
-   ): Promise<T> {
-     const res = await fetch(url, init);
-     if (!res.ok) throw new ApiError(res.status, await res.text());
-     const json: unknown = await res.json();
-     return schema.parse(json); // throws ZodError on contract mismatch
-   }
-   ```
+    ```ts
+    export async function apiFetch<T>(url: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
+        const res = await fetch(url, init);
+        if (!res.ok) throw new ApiError(res.status, await res.text());
+        const json: unknown = await res.json();
+        return schema.parse(json); // throws ZodError on contract mismatch
+    }
+    ```
 5. **Standardized response envelope.** All API responses follow the same validated shape. Define a generic wrapper so success/error handling is uniform:
 
-   ```ts
-   export const ApiResponseSchema = <T extends z.ZodTypeAny>(data: T) =>
-     z.object({
-       success: z.literal(true),
-       data,
-       meta: z.object({ page: z.number(), total: z.number() }).optional(),
-     });
+    ```ts
+    export const ApiResponseSchema = <T extends z.ZodTypeAny>(data: T) =>
+        z.object({
+            success: z.literal(true),
+            data,
+            meta: z.object({ page: z.number(), total: z.number() }).optional(),
+        });
 
-   export const ApiErrorSchema = z.object({
-     success: z.literal(false),
-     error: z.object({
-       code: z.string(),
-       message: z.string(), // user-facing, in Spanish
-     }),
-   });
-   ```
+    export const ApiErrorSchema = z.object({
+        success: z.literal(false),
+        error: z.object({
+            code: z.string(),
+            message: z.string(), // user-facing, in Spanish
+        }),
+    });
+    ```
 
 6. **Schema location**:
-   - Domain/shared schemas → `src/lib/validations/<domain>.ts`
-   - Response/contract schemas → next to the data fetcher in `src/data/<resource>/types.ts`
-   - Server Action input schemas → next to the action in `src/actions/<resource>/`
+    - Domain/shared schemas → `src/lib/validations/<domain>.ts`
+    - Response/contract schemas → next to the data fetcher in `src/data/<resource>/types.ts`
+    - Server Action input schemas → next to the action in `src/actions/<resource>/`
 7. **Server Actions validate input with `safeParse`** and return field errors on failure (never throw raw to the client):
-   ```ts
-   const parsed = LoginSchema.safeParse(input);
-   if (!parsed.success) {
-     return { success: false, errors: parsed.error.flatten().fieldErrors };
-   }
-   ```
+    ```ts
+    const parsed = LoginSchema.safeParse(input);
+    if (!parsed.success) {
+        return { success: false, errors: parsed.error.flatten().fieldErrors };
+    }
+    ```
 8. **Server Action signature — match how it's actually called.** The `(prevState, formData: FormData)` shape exists for one reason: `useActionState` + `<form action={...}>` requires it. If a Server Action is invoked that way, use that signature and parse fields with `formData.get(...)`.
    If instead it's called manually from a client handler (e.g. React Hook Form's `handleSubmit(data => action(data))`), take the typed input directly — `async (input: MyInput) => {...}` — and `safeParse(input)`. Don't build a `FormData` object by hand just to unwrap it again on the server; that's serializing data you already have typed and validated, for no benefit.
 9. **Forms**: use `@hookform/resolvers/zod` so the same schema validates the form and the Server Action — one schema, both layers.
